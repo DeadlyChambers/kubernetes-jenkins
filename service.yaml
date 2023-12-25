@@ -10,8 +10,34 @@ metadata:
 spec:
   selector: 
     app: jenkins-server
-  type: NodePort  
+  type: ClusterIP
   ports:
-    - port: 8080
+    - name: httpport
+      port: 8080
       targetPort: 8080
-      nodePort: 32000
+      protocol: TCP
+      appProtocol: http
+    - name: jnlppport
+      port: 50000
+      targetPort: 50000
+      protocol: TCP
+      appProtocol: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name:  default-http-backend
+spec:
+  selector:
+    app:  default-response-app
+  ports:
+  - name:  default-jenkins
+    protocol: TCP
+    port: 80
+    targetPort:  8080
+
+    # - name: jnlpport
+    #   port: 50000
+    #   targetPort: 8080
+    #   protocol: TCP
+    #   appProtocol: http

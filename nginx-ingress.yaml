@@ -1,0 +1,66 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: jenkins-ingress
+  namespace: default
+  annotations: {}
+  labels:
+    app: jenkins-server
+
+spec:
+  ingressClassName: nginx-ingress-microk8s-controller
+  rules:
+  - host: jenkins.r2d2.local
+    http:
+      paths:
+      - backend:
+          service:
+            name: jenkins-service
+            port:
+              number: 8080
+        path: /
+        pathType: Prefix
+      - backend:
+          service:
+            name: jenkins-service
+            port:
+              number: 50000
+        path: /
+        pathType: Prefix
+  - host: jenkins-static.r2d2.local
+    http:
+      paths:
+      - backend:
+          service:
+            name: jenkins-service
+            port:
+              number: 8080
+        path: /
+        pathType: Prefix
+
+        #---
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   name: nginx-ingress-tcp-microk8s-conf
+#   namespace: ingress
+# data:
+#   32001: "jenkins-server/redis:6379"
+# ---
+# apiVersion: apps/v1
+# kind: DaemonSet
+# metadata:
+#   name: nginx-ingress-microk8s-controller
+#   namespace: ingress
+# spec:
+#   template:
+#     spec:
+#       containers:
+#       - name: nginx-ingress-microk8s
+#         ports:
+#         - containerPort: 80
+#         - containerPort: 443
+#         - name: proxied-tcp-6379
+#           containerPort: 6379
+#           hostPort: 6379
+#           protocol: TCP

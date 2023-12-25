@@ -19,7 +19,7 @@ spec:
       serviceAccountName: jenkins-admin
       containers:
         - name: jenkins
-          image: jenkins/jenkins:lts
+          image: jenkins/jenkins:2.437-jdk17
           resources:
             limits:
               memory: "2Gi"
@@ -50,7 +50,7 @@ spec:
             failureThreshold: 3
           volumeMounts:
             - name: jenkins-data
-              mountPath: /var/jenkins_home         
+              mountPath: /var/jenkins_home
       volumes:
         - name: jenkins-data
           persistentVolumeClaim:
